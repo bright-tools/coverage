@@ -17,22 +17,22 @@
 #include "clang/AST/RecursiveASTVisitor.h"
 #include "clang/Rewrite/Core/Rewriter.h"
 #include "clang/Rewrite/Frontend/Rewriters.h"
+#include "clang/Tooling/Refactoring.h"
+#include "clang/Tooling/Tooling.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
 
-// By implementing RecursiveASTVisitor, we can specify which AST nodes
-// we're interested in by overriding relevant methods.
-class Annotator : public clang::RecursiveASTVisitor<Annotator>
+using namespace clang;
+using namespace clang::ast_matchers;
+using namespace clang::tooling;
+
+class ForAnnotator : public MatchFinder::MatchCallback
 {
 public:
-    Annotator(clang::Rewriter &R);
-
-    bool VisitStmt(clang::Stmt *s);
-
-    bool VisitFunctionDecl(clang::FunctionDecl *f);
-
+    ForAnnotator(Replacements *Replace);
+    virtual void run(const MatchFinder::MatchResult &Result);
 private:
-    void AddBraces(clang::Stmt *s);
-
-    clang::Rewriter &TheRewriter;
+    Replacements *Replace;
 };
 
 
