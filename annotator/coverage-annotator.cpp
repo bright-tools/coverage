@@ -19,101 +19,115 @@
  at http://eli.thegreenplace.net/2012/06/08/basic-source-to-source-transformation-with-clang/
  Grateful thanks are due to Eli for sharing his knowledge
 */
-#include <cstdio>
-#include <string>
 
-#include "clang/AST/ASTConsumer.h"
-#include "clang/Basic/Diagnostic.h"
-#include "clang/Basic/FileManager.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
 #include "clang/Basic/SourceManager.h"
-#include "clang/Basic/TargetOptions.h"
-#include "clang/Basic/TargetInfo.h"
-#include "clang/Frontend/CompilerInstance.h"
-#include "clang/Lex/Preprocessor.h"
-#include "clang/Parse/ParseAST.h"
-#include "llvm/Support/Host.h"
+#include "clang/Frontend/FrontendActions.h"
+#include "clang/Lex/Lexer.h"
+#include "clang/Tooling/CompilationDatabase.h"
+#include "clang/Tooling/Refactoring.h"
+#include "clang/Tooling/Tooling.h"
+#include "llvm/ADT/OwningPtr.h"
+#include "llvm/Support/CommandLine.h"
+#include "llvm/Support/MemoryBuffer.h"
+#include "llvm/Support/Signals.h"
 #include "llvm/Support/raw_ostream.h"
 
+
+#include "clang/Frontend/TextDiagnosticPrinter.h"
+
+#include "ForAnnotator.hpp"
+
+#include <string>
+
+
 using namespace clang;
-using namespace std;
+using namespace clang::ast_matchers;
+using namespace clang::tooling;
+using namespace llvm;
 
-#include "Annotator.hpp"
+namespace {
+class ToolTemplateCallback : public MatchFinder::MatchCallback {
+ public:
+  ToolTemplateCallback(Replacements *Replace) : Replace(Replace) {}
 
-// Implementation of the ASTConsumer interface for reading an AST produced
-// by the Clang parser.
-class MyASTConsumer : public ASTConsumer
-{
-public:
-    MyASTConsumer(Rewriter &R)
-        : Visitor(R)
-    {}
+  virtual void run(const MatchFinder::MatchResult &Result) {
+//  TODO: This routine will get called for each thing that the matchers find.
+//  At this point, you can examine the match, and do whatever you want,
+//  including replacing the matched text with other text
+  (void) Replace; // This to prevent an "unused member variable" warning;
+  }
 
-    // Override the method that gets called for each parsed top-level
-    // declaration.
-    virtual bool HandleTopLevelDecl(DeclGroupRef DR) {
-        for (DeclGroupRef::iterator b = DR.begin(), e = DR.end();
-             b != e; ++b)
-            // Traverse the declaration using our AST visitor.
-            Visitor.TraverseDecl(*b);
-        return true;
-    }
-
-private:
-    Annotator Visitor;
+ private:
+  Replacements *Replace;
 };
+} // end anonymous namespace
 
+// Set up the command line options
+cl::opt<std::string> BuildPath(
+  cl::Positional,
+  cl::desc("<build-path>"));
 
-int main(int argc, char *argv[])
-{
-    if (argc != 2) {
-        llvm::errs() << "Usage: " << argv[0] << " <filename>\n";
-        return 1;
+cl::list<std::string> SourcePaths(
+  cl::Positional,
+  cl::desc("<source>"),
+  cl::Required);
+
+StatementMatcher LoopMatcher = forStmt().bind("forLoop");
+
+int main(int argc, const char **argv) {
+  llvm::sys::PrintStackTraceOnErrorSignal();
+  llvm::OwningPtr<CompilationDatabase> Compilations(
+        FixedCompilationDatabase::loadFromCommandLine(argc, argv));
+  cl::ParseCommandLineOptions(argc, argv);
+  if (!Compilations) {  // Couldn't find a compilation DB from the command line
+    std::string ErrorMessage;
+    Compilations.reset(
+      !BuildPath.empty() ?
+        CompilationDatabase::autoDetectFromDirectory(BuildPath, ErrorMessage) :
+        CompilationDatabase::autoDetectFromSource(SourcePaths[0], ErrorMessage)
+      );
+
+//  Still no compilation DB? - bail.
+    if (!Compilations)
+    {
+      llvm::report_fatal_error(ErrorMessage);
+    }
+  }
+  RefactoringTool Tool(*Compilations, SourcePaths);
+  ast_matchers::MatchFinder Finder;
+  //ToolTemplateCallback Callback(&Tool.getReplacements());
+
+  ForAnnotator forAnnotator(&Tool.getReplacements());
+  Finder.addMatcher(LoopMatcher, &forAnnotator);
+
+  int Result = Tool.run(newFrontendActionFactory(&Finder));
+  if( !Result ) {
+    LangOptions DefaultLangOptions;
+    IntrusiveRefCntPtr<DiagnosticOptions> DiagOpts = new DiagnosticOptions();
+    TextDiagnosticPrinter DiagnosticPrinter(llvm::errs(), &*DiagOpts);
+    DiagnosticsEngine Diagnostics(
+        IntrusiveRefCntPtr<DiagnosticIDs>(new DiagnosticIDs()),
+        &*DiagOpts, &DiagnosticPrinter, false);
+    SourceManager Sources(Diagnostics, Tool.getFiles());
+    Rewriter Rewrite(Sources, DefaultLangOptions);
+    // TODO: hard-code to argv[1]
+    const FileEntry *FileIn = Sources.getFileManager().getFile(argv[1]);
+    FileID f = Sources.createMainFileID(FileIn);
+
+    if (!tooling::applyAllReplacements(Tool.getReplacements(),Rewrite)) {
+      llvm::errs() << "Skipped some replacements.\n";
     }
 
-    // CompilerInstance will hold the instance of the Clang compiler for us,
-    // managing the various objects needed to run the compiler.
-    CompilerInstance TheCompInst;
-    TheCompInst.createDiagnostics( (DiagnosticConsumer *)NULL, false);
-
-    // Initialize target info with the default triple for our platform.
-    TargetOptions TO;
-    TO.Triple = llvm::sys::getDefaultTargetTriple();
-    TargetInfo *TI = TargetInfo::CreateTargetInfo(
-        TheCompInst.getDiagnostics(), &TO);
-    TheCompInst.setTarget(TI);
-
-    TheCompInst.createFileManager();
-    FileManager &FileMgr = TheCompInst.getFileManager();
-    TheCompInst.createSourceManager(FileMgr);
-    SourceManager &SourceMgr = TheCompInst.getSourceManager();
-    TheCompInst.createPreprocessor();
-    TheCompInst.createASTContext();
-
-    // A Rewriter helps us manage the code rewriting task.
-    Rewriter TheRewriter;
-    TheRewriter.setSourceMgr(SourceMgr, TheCompInst.getLangOpts());
-
-    // Set the main file handled by the source manager to the input file.
-    const FileEntry *FileIn = FileMgr.getFile(argv[1]);
-    SourceMgr.createMainFileID(FileIn);
-    TheCompInst.getDiagnosticClient().BeginSourceFile(
-        TheCompInst.getLangOpts(),
-        &TheCompInst.getPreprocessor());
-
-    // Create an AST consumer instance which is going to get called by
-    // ParseAST.
-    MyASTConsumer TheConsumer(TheRewriter);
-
-    // Parse the file to AST, registering our consumer as the AST consumer.
-    ParseAST(TheCompInst.getPreprocessor(), &TheConsumer,
-             TheCompInst.getASTContext());
-
-    // At this point the rewriter's buffer should be full with the rewritten
-    // file contents.
     const RewriteBuffer *RewriteBuf =
-        TheRewriter.getRewriteBufferFor(SourceMgr.getMainFileID());
-    llvm::outs() << string(RewriteBuf->begin(), RewriteBuf->end());
+       Rewrite.getRewriteBufferFor(f);
+    if( RewriteBuf == NULL ) {
+      llvm::errs() << "Couldn't get rewrite buffer.\n";
+    } else {
+      llvm::outs() << std::string(RewriteBuf->begin(), RewriteBuf->end());
+    }
 
-    return 0;
+  }
+  return Result;
 }
-
