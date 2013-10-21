@@ -104,7 +104,7 @@ std::string AnnotationGenerator::GetAnnotation( const clang::ast_matchers::Match
 	std::string filen = (*Result.SourceManager).getFilename( startLoc );
 	std::string funn = getFuncName( *Result.Context, pStmt );
 
-	ret << GetAnnotationPrefix() << "(\"" << filen << "\",\"" << funn << "\"," << loc << ");";
+	ret << GetAnnotationPrefix() << "(\"" << filen << "\",\"" << funn << "\"," << loc << ");\n";
 
 	return ret.str();
 }

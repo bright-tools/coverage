@@ -24,7 +24,8 @@ int main( void )
     if( i == 0 );
 
     if( i == 0 )
-        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-3.c","main",727);return 1;}
+        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-3.c","main",727);
+return 1;}
 
     /* This function will always return due to the above.  As there's no code
        here, there should be no instrumentation generated to determine whether

@@ -50,10 +50,7 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 			HandleNonCompound( Result, thenBody );
 		}
 
-		if( thenBody->getStmtClass() != Stmt::NullStmtClass )
-		{
-			HandleFlowChange( Result, thenBody );
-		}
+		HandleFlowChange( Result, thenBody );
 
 		const Stmt* elseBody = FS->getElse();
 
@@ -66,8 +63,7 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 			HandleNonCompound( Result, elseBody );
 		}
 
-		if( (elseBody != NULL ) &&
-			( elseBody->getStmtClass() != Stmt::NullStmtClass ))
+		if( elseBody != NULL )
 		{
 			HandleFlowChange( Result, elseBody );
 		}

@@ -65,6 +65,8 @@ void ForAnnotator::run(const MatchFinder::MatchResult &Result)
 			//forBody->dump();
 		}
 
+		HandleFlowChange( Result, forBody );
+
 #if 0
 		for( Stmt::const_child_iterator x = FS->child_begin(); x!= FS->child_end(); x++ ) {
 			if(( *x != NULL ) &&

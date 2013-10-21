@@ -26,11 +26,14 @@ int main( void )
         int j = 3;
         int q = 1;
 
-        BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",704);if( j == 3 )
-            {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",778);t = 7;}
+        BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",704);
+if( j == 3 )
+            {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",778);
+t = 7;}
 
         if( t == 7 )
-            {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",819);return 1;}
+            {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",819);
+return 1;}
     }
 
     return 0;

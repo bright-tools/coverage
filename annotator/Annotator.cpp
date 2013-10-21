@@ -38,30 +38,35 @@ Annotator::~Annotator()
 
 void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
 {
-	string annotationText = annotationGenerator.GetAnnotation( Result, pStmt );
-
-	pStmt->dump();
-
-	SourceLocation loc;
-
-	/* Check to see if the note we're looking at is compound */
-	if( pStmt->getStmtClass() == Stmt::CompoundStmtClass )
+	if( pStmt->getStmtClass() != Stmt::NullStmtClass )
 	{
-		/* If it is compound, need to make sure that we insert the annotation after any delcaration */
-		for( Stmt::const_child_iterator x = pStmt->child_begin(); x!= pStmt->child_end(); x++ ) {
-			if(( *x != NULL ) &&
-				( x->getStmtClass() != Stmt::NullStmtClass ) &&
-				( x->getStmtClass() != Stmt::DeclStmtClass ))
-			{
-				loc  = x->getLocStart();
-				break;	
-			}
-		}
-	} else {
-		loc = pStmt->getLocStart();
-	}
+		string annotationText = annotationGenerator.GetAnnotation( Result, pStmt );
 
-	Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, annotationText));
+#if 0
+		pStmt->dump();
+#endif
+
+		SourceLocation loc;
+
+		/* Check to see if the note we're looking at is compound */
+		if( pStmt->getStmtClass() == Stmt::CompoundStmtClass )
+		{
+			/* If it is compound, need to make sure that we insert the annotation after any delcaration */
+			for( Stmt::const_child_iterator chld = pStmt->child_begin(); chld!= pStmt->child_end(); chld++ ) {
+				if(( *chld != NULL ) &&
+					( chld->getStmtClass() != Stmt::NullStmtClass ) &&
+					( chld->getStmtClass() != Stmt::DeclStmtClass ))
+				{
+					loc  = chld->getLocStart();
+					break;	
+				}
+			}
+		} else {
+			loc = pStmt->getLocStart();
+		}
+
+		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, annotationText));
+	}
 }
 
 void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
