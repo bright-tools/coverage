@@ -16,15 +16,16 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i;
+  int i;
 
-    /* Infinite loop */
-    for( i = 0; i < 1; )
+  /* Infinite loop */
+  for (i = 0; i < 1;)
     {
-        /* But the infinite loop exits */
-        return 1;
+      /* But the infinite loop exits */
+      return 1;
     }
-    /* No code here, so not unreachable! */
+  /* No code here, so not unreachable! */
 }

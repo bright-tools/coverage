@@ -16,11 +16,13 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    return 0;
+  return 0;
 
-    if( 1 ) {
-        return 1;
+  if (1)
+    {
+      return 1;
     }
 }

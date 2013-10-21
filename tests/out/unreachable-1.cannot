@@ -16,12 +16,16 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    return 0;
+  return 0;
 
-    if( 1 ) {
-        BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\unreachable-1.c","main",683);
-return 1;
+  if (1)
+    {
+      BRIGHT_COVERAGE
+	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\unreachable-1.c",
+	 "main", 683);
+      return 1;
     }
 }

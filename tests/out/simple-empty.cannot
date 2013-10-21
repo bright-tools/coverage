@@ -16,6 +16,7 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
 }

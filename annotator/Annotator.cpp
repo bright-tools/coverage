@@ -69,7 +69,7 @@ void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchR
 	}
 }
 
-void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
+void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const clang::Stmt* pParent )
 {
 	SourceLocation loc,sloc;
 
@@ -81,9 +81,13 @@ void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::Match
 
 		llvm::errs() << "Annotator::HandleNonCompound ~ Wrapping into compound\n";
 
+		string stmt_class = pParent->getStmtClassName();
+	    string opening = "{ /* coverage: Made " + stmt_class + " compound */\n";
+	    string closing = "} /* coverage: Made " + stmt_class + " compound */\n";
+
 		// Find start location and add an replacement to nopening brace
 		loc = pStmt->getLocStart();
-		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, "{"));
+		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, opening));
 
 		// Non-compound statement is likely to have a semi-colon separator.  Try and find it.
 		sloc = findSemiAfterLocation( pStmt->getLocEnd(), *(Result.Context) );
@@ -97,7 +101,7 @@ void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::Match
 		loc = Lexer::getLocForEndOfToken(sloc, 0, (*Result.SourceManager), LangOptions());
 
 		// Add closing brace
-		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, "}"));
+		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, closing));
 	}
 
 	llvm::errs() << "Annotator::HandleNonCompound ~ Done\n";

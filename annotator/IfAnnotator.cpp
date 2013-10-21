@@ -47,7 +47,7 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 		if( thenBody->getStmtClass() != Stmt::CompoundStmtClass )
 		{
 			llvm::errs() << "IfAnnotator::run ~ Non-compound 'then'\n";
-			HandleNonCompound( Result, thenBody );
+			HandleNonCompound( Result, thenBody, FS );
 		}
 
 		HandleFlowChange( Result, thenBody );
@@ -60,7 +60,7 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 			( elseBody->getStmtClass() != Stmt::IfStmtClass ))
 		{
 			llvm::errs() << "IfAnnotator::run ~ Non-compound 'else'\n";
-			HandleNonCompound( Result, elseBody );
+			HandleNonCompound( Result, elseBody, FS );
 		}
 
 		if( elseBody != NULL )

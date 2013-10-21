@@ -16,13 +16,14 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i;
-    int j;
+  int i;
+  int j;
 
-    i = 1;
-    j = 2;
+  i = 1;
+  j = 2;
 
-    return i + j;
+  return i + j;
 }

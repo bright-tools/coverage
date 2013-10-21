@@ -16,22 +16,23 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i = 0;
-    int t;
+  int i = 0;
+  int t;
 
-    if( i == 0 )
+  if (i == 0)
     {
-        int j = 3;
-        int q = 1;
+      int j = 3;
+      int q = 1;
 
-        if( j == 3 )
-            t = 7;
+      if (j == 3)
+	t = 7;
 
-        if( t == 7 )
-            return 1;
+      if (t == 7)
+	return 1;
     }
 
-    return 0;
+  return 0;
 }

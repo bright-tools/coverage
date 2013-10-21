@@ -16,25 +16,25 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i;
-    int t;
+  int i;
+  int t;
 
-    if( i == 0 )
-        t = 1;
-    else if( i < 0 )
-        t = 2;
-    else
-        t = 3;
+  if (i == 0)
+    t = 1;
+  else if (i < 0)
+    t = 2;
+  else
+    t = 3;
 
-    if( i == 0 )
-        ;
-    else
-        ;
+  if (i == 0)
+    ;
+  else;
 
-    if( i == 0 )
-        t = 3;
+  if (i == 0)
+    t = 3;
 
-    return 0;
+  return 0;
 }

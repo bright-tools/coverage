@@ -16,19 +16,21 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i;
+  int i;
 
-    return 0;
-    /* Following code is unreachable */
+  return 0;
+  /* Following code is unreachable */
 
-    /* Infinite loop */
-    while( 1 ) {
+  /* Infinite loop */
+  while (1)
+    {
     }
 
-    /* Infinite loop */
-    for( i = 0; i < 1; )
+  /* Infinite loop */
+  for (i = 0; i < 1;)
     {
     }
 }

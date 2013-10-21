@@ -16,27 +16,52 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i;
-    int t;
-    for( i = 0; i < 0; i++ ) {
-        BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c","main",707);
-t++;
+  int i;
+  int t;
+  for (i = 0; i < 0; i++)
+    {
+      BRIGHT_COVERAGE
+        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
+         "main", 703);
+      t++;
     }
-    for( i = 0; i < 0; i++ ) {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c","main",757);
-t++,i++,t++;}
-    
-    for( i = 0; i < 0; i++ ) {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c","main",804);
-++t;}
+  for (i = 0; i < 0; i++)
+    {                           /* coverage: Made ForStmt compound */
+      BRIGHT_COVERAGE
+        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
+         "main", 752);
+      t++, i++, t++;
+    }                           /* coverage: Made ForStmt compound */
 
-    for( i = 0; i < 1; i++ )
-        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c","main",847);
-if( i == 0 )
-            {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c","main",872);
-t++;}
- 
-    for( i = 0; i < 0; i++,t++ );
 
-    return 0;
+  for (i = 0; i < 0; i++)
+    {                           /* coverage: Made ForStmt compound */
+      BRIGHT_COVERAGE
+        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
+         "main", 798);
+      ++t;
+    }                           /* coverage: Made ForStmt compound */
+
+
+  for (i = 0; i < 1; i++)
+    {                           /* coverage: Made ForStmt compound */
+      BRIGHT_COVERAGE
+        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
+         "main", 834);
+      if (i == 0)
+        {                       /* coverage: Made IfStmt compound */
+          BRIGHT_COVERAGE
+            ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
+             "main", 852);
+          t++;
+        }                       /* coverage: Made IfStmt compound */
+    }                           /* coverage: Made ForStmt compound */
+
+
+  for (i = 0; i < 0; i++, t++);
+
+  return 0;
 }

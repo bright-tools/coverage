@@ -16,17 +16,18 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i = 0;
-    int t;
+  int i = 0;
+  int t;
 
-    if( i == 0 );
+  if (i == 0);
 
-    if( i == 0 )
-        return 1;
+  if (i == 0)
+    return 1;
 
-    /* This function will always return due to the above.  As there's no code
-       here, there should be no instrumentation generated to determine whether
-       or not we "reached" this point */
+  /* This function will always return due to the above.  As there's no code
+     here, there should be no instrumentation generated to determine whether
+     or not we "reached" this point */
 }

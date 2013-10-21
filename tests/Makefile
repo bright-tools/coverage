@@ -4,6 +4,10 @@ TEST_REPORTS=$(foreach F,$(TEST_FILES:.c=.cannot),out/$F)
 
 ANNOTATE=../../../build4/bin/Debug/coverage.exe
 OUTPUT_DIR=out
+INDENT_CMD=indent
+INDENT_OPT=-nut
+# Could replace this with "cat" if "indent" not installed?
+INDENT=$(INDENT_CMD) $(INDENT_OPT)
 
 all: $(OUTPUT_DIR) $(TEST_REPORTS)
 
@@ -14,4 +18,4 @@ clean:
 	rm -f $(TEST_REPORTS)
 
 $(OUTPUT_DIR)/%.cannot: %.c $(ANNOTATE)
-	$(ANNOTATE) $< -- > $@
+	$(ANNOTATE) $< -- | $(INDENT) > $@

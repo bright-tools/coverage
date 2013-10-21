@@ -61,7 +61,7 @@ void ForAnnotator::run(const MatchFinder::MatchResult &Result)
 
 		if( forBody->getStmtClass() != Stmt::CompoundStmtClass )
 		{
-			HandleNonCompound( Result, forBody );
+			HandleNonCompound( Result, forBody, FS );
 			//forBody->dump();
 		}
 

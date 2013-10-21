@@ -16,7 +16,8 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    return 0;
+  return 0;
 }

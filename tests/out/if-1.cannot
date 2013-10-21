@@ -16,30 +16,49 @@
    limitations under the License.
 */
 
-int main( void )
+int
+main (void)
 {
-    int i;
-    int t;
+  int i;
+  int t;
 
-    if( i == 0 )
-        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c","main",704);
-t = 1;}
-    else BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c","main",720);
-if( i < 0 )
-        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c","main",740);
-t = 2;}
-    else
-        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c","main",764);
-t = 3;}
+  if (i == 0)
+    {
+      BRIGHT_COVERAGE
+	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
+	 "main", 704);
+      t = 1;
+    }
+  else
+    BRIGHT_COVERAGE
+      ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
+       "main", 720);
+  if (i < 0)
+    {
+      BRIGHT_COVERAGE
+	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
+	 "main", 740);
+      t = 2;
+    }
+  else
+    {
+      BRIGHT_COVERAGE
+	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
+	 "main", 764);
+      t = 3;
+    }
 
-    if( i == 0 )
-        ;
-    else
-        ;
+  if (i == 0)
+    ;
+  else;
 
-    if( i == 0 )
-        {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c","main",844);
-t = 3;}
+  if (i == 0)
+    {
+      BRIGHT_COVERAGE
+	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
+	 "main", 844);
+      t = 3;
+    }
 
-    return 0;
+  return 0;
 }

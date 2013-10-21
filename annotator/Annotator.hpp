@@ -31,7 +31,7 @@ public:
 
     virtual void run(const clang::ast_matchers::MatchFinder::MatchResult &Result) = 0;
 
-	void HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
+	void HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const clang::Stmt* pParent );
 
 	void HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
 
