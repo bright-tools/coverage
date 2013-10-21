@@ -21,17 +21,26 @@
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 
+#include "AnnotationGenerator.hpp"
+
 class Annotator : public clang::ast_matchers::MatchFinder::MatchCallback
 {
 public:
     Annotator(clang::tooling::Replacements *Replace);
+	~Annotator();
+
     virtual void run(const clang::ast_matchers::MatchFinder::MatchResult &Result) = 0;
 
 	void HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
+
+	void HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
+
 protected:
 	const clang::Stmt* FindLast( const clang::Stmt* pStmt );
 
     clang::tooling::Replacements *Replace;
+
+	static AnnotationGenerator annotationGenerator;
 };
 
 #endif

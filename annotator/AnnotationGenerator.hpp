@@ -13,8 +13,12 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+#if !defined( ANNOTATOR_ANNOTATOR_GENERATOR_HPP )
+#define       ANNOTATOR_ANNOTATOR_GENERATOR_HPP
 
 #include "clang/AST/ASTConsumer.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
 
 #include <string>
 
@@ -23,8 +27,13 @@ class AnnotationGenerator
     public:
         AnnotationGenerator();
 
+		std::string GetAnnotation( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
+
+	protected:
         static std::string GetFunctionStartAnnotation( const clang::FunctionDecl* const p_fn );
         static std::string GetFunctionEndAnnotation( clang::FunctionDecl* p_fn );
-
         static std::string GetAnnotationPrefix();
+
 };
+
+#endif

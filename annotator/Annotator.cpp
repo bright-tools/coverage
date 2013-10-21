@@ -26,8 +26,22 @@
 using namespace clang;
 using namespace std;
 
+AnnotationGenerator Annotator::annotationGenerator;
+
 Annotator::Annotator(clang::tooling::Replacements *Replace) : Replace(Replace)
 {
+}
+
+Annotator::~Annotator()
+{
+}
+
+void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
+{
+	string annotationText = annotationGenerator.GetAnnotation( Result, pStmt );
+
+	SourceLocation loc = pStmt->getLocStart();
+	Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, annotationText));
 }
 
 void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )

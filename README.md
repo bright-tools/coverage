@@ -27,11 +27,12 @@ insignificant amount of time trying to build LLVM on Windows under MinGW
 and despite trying 3 or 4 different versions of GCC, ran into problems at
 various stages (including GCC crashing during link).  Anyway, in order to build
 the annotator you'll need to build clang - see the instructions at [3].  
-Copy the "annotator" subdirectory to "llvm/tools/clang/tools/extra" and then add
+Copy the "annotator" subdirectory to `llvm/tools/clang/tools/extra` and
+then add
 
     add_subdirectory(coverage)
 
-To the end of llvm/tools/clang/tools/extra/CMakeLists.txt.  Re-run cmake.
+To the end of `llvm/tools/clang/tools/extra/CMakeLists.txt` .  Re-run cmake.
 
 References
 ==========

@@ -18,11 +18,15 @@
 
 #include "clang/AST/DeclarationName.h"
 #include "clang/AST/Decl.h"
+#include "clang/AST/ASTContext.h"
+#include "clang/Basic/SourceManager.h"
+
 
 using namespace clang;
 using namespace std;
 
 #include <iostream>
+#include <sstream>
 
 AnnotationGenerator::AnnotationGenerator()
 {
@@ -31,14 +35,15 @@ AnnotationGenerator::AnnotationGenerator()
 
 std::string AnnotationGenerator::GetAnnotationPrefix()
 {
-    return "BRIGHT_COVERAGE_";
+    return "BRIGHT_COVERAGE";
 }
 
+#if 0
 static const DeclContext *getOutermostFuncOrBlockContext(const Decl *D) {
   const DeclContext *Ret = NULL;
   const DeclContext *DC = D->getDeclContext();
   do  {
-    if (DC->getDeclKind() == Decl::TranslationUnit)
+    if (DC->getDeclKind() == Decl::FunctionDecl)
     {
       Ret = DC;
       std::cout << "FOUND IT\n";
@@ -48,7 +53,62 @@ static const DeclContext *getOutermostFuncOrBlockContext(const Decl *D) {
   } while((DC != NULL ) && (DC->getDeclKind() != Decl::TranslationUnit));
   return Ret;
 }
+#endif
 
+std::string getFuncName( ASTContext& pCtx, const clang::Stmt* pStmt )
+{
+	std::string ret;
+	/* Start the search on the node we were passed */
+	const clang::Stmt* node = pStmt;
+	const clang::NamedDecl* decl;
+
+	clang::ASTContext::ParentVector ancestors;
+
+	do {
+		/* Get parents for the current node of interest */
+		ancestors = pCtx.getParents( *node );
+	
+		/* Examine all the parents */
+		for (ASTContext::ParentVector::const_iterator I = ancestors.begin(),
+                                                      E = ancestors.end();
+			I != E; 
+			++I) {
+
+			/* TODO: this won't deal with nodes with multiple parents properly */
+			
+			/* Set the next parent to look at */	
+			node = I->get<Stmt>();
+#if 0
+			if( node != NULL ) {
+				llvm::errs() << node->getStmtClassName() << "\n";
+			}
+#endif
+			/* Check to see if we've found a named decl, and if so nab the name */
+			decl = I->get<NamedDecl>();
+			if( decl != NULL ) {
+				ret = decl->getName();
+				decl->dump();
+			}
+		}
+	} while( ancestors.size() && ( node != NULL ) );
+
+	return ret;
+}
+
+std::string AnnotationGenerator::GetAnnotation( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
+{
+	stringstream ret;
+
+	SourceLocation startLoc = pStmt->getLocStart();
+	int loc = startLoc.getRawEncoding();
+	/* TODO: this needs to be stripped down so that it's not an absolute path */
+	std::string filen = (*Result.SourceManager).getFilename( startLoc );
+	std::string funn = getFuncName( *Result.Context, pStmt );
+
+	ret << GetAnnotationPrefix() << "(\"" << filen << "\",\"" << funn << "\"," << loc << ");";
+
+	return ret.str();
+}
 
 std::string AnnotationGenerator::GetFunctionStartAnnotation( const clang::FunctionDecl* const p_fn )
 {
