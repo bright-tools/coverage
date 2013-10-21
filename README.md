@@ -4,9 +4,9 @@ coverage
 Utilities to provide code execution coverage metrics for "C"-coded files.
 Currently formed of 2 parts:
 
-annotator : Annotates "C" code such that coverage of the execution can
-            be tracked
-analyser : Analyses the result of annotated code which has been executed
+  * annotator : Annotates "C" code such that coverage of the execution can
+                be tracked
+  * analyser : Analyses the result of annotated code which has been executed
 
 NOTE: This is a very new project and is not yet in a usable state, as such
 there are no pre-built binaries, etc.
@@ -36,6 +36,6 @@ To the end of llvm/tools/clang/tools/extra/CMakeLists.txt.  Re-run cmake.
 References
 ==========
 
-[1] http://clang.llvm.org/
-[2] http://clang.llvm.org/docs/LibTooling.html
-[3] http://clang.llvm.org/get_started.html
+  * [1] http://clang.llvm.org/
+  * [2] http://clang.llvm.org/docs/LibTooling.html
+  * [3] http://clang.llvm.org/get_started.html
