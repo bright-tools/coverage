@@ -40,7 +40,27 @@ void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchR
 {
 	string annotationText = annotationGenerator.GetAnnotation( Result, pStmt );
 
-	SourceLocation loc = pStmt->getLocStart();
+	pStmt->dump();
+
+	SourceLocation loc;
+
+	/* Check to see if the note we're looking at is compound */
+	if( pStmt->getStmtClass() == Stmt::CompoundStmtClass )
+	{
+		/* If it is compound, need to make sure that we insert the annotation after any delcaration */
+		for( Stmt::const_child_iterator x = pStmt->child_begin(); x!= pStmt->child_end(); x++ ) {
+			if(( *x != NULL ) &&
+				( x->getStmtClass() != Stmt::NullStmtClass ) &&
+				( x->getStmtClass() != Stmt::DeclStmtClass ))
+			{
+				loc  = x->getLocStart();
+				break;	
+			}
+		}
+	} else {
+		loc = pStmt->getLocStart();
+	}
+
 	Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, annotationText));
 }
 

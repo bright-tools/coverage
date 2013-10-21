@@ -87,7 +87,6 @@ std::string getFuncName( ASTContext& pCtx, const clang::Stmt* pStmt )
 			decl = I->get<NamedDecl>();
 			if( decl != NULL ) {
 				ret = decl->getName();
-				decl->dump();
 			}
 		}
 	} while( ancestors.size() && ( node != NULL ) );

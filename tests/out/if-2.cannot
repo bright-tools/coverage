@@ -22,11 +22,11 @@ int main( void )
     int t;
 
     if( i == 0 )
-    BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",704);{
+    {
         int j = 3;
         int q = 1;
 
-        if( j == 3 )
+        BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",704);if( j == 3 )
             {BRIGHT_COVERAGE("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c","main",778);t = 7;}
 
         if( t == 7 )
