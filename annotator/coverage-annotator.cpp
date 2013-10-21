@@ -129,11 +129,13 @@ int main(int argc, const char **argv) {
     const RewriteBuffer *RewriteBuf =
        Rewrite.getRewriteBufferFor(f);
     if( RewriteBuf == NULL ) {
-      llvm::errs() << "Couldn't get rewrite buffer.\n";
+		/* No re-writes?  Use file verbatim */
+		llvm::errs() << "Couldn't get rewrite buffer.\n";
+		const MemoryBuffer* verbatimBuffer = Sources.getFileManager().getBufferForFile(FileIn);
+		llvm::outs() << std::string(verbatimBuffer->getBufferStart(), verbatimBuffer->getBufferEnd());
     } else {
       llvm::outs() << std::string(RewriteBuf->begin(), RewriteBuf->end());
-    }
-
+	}
   }
   return Result;
 }
