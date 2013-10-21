@@ -33,11 +33,14 @@
 #include "llvm/Support/MemoryBuffer.h"
 #include "llvm/Support/Signals.h"
 #include "llvm/Support/raw_ostream.h"
+#include "clang/Rewrite/Core/Rewriter.h"
+#include "clang/Rewrite/Frontend/Rewriters.h"
 
 
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
 #include "ForAnnotator.hpp"
+#include "IfAnnotator.hpp"
 
 #include <string>
 
@@ -75,6 +78,7 @@ cl::list<std::string> SourcePaths(
   cl::Required);
 
 StatementMatcher LoopMatcher = forStmt().bind("forLoop");
+StatementMatcher IfMatcher = ifStmt().bind("ifStmt");
 
 int main(int argc, const char **argv) {
   llvm::sys::PrintStackTraceOnErrorSignal();
@@ -101,6 +105,8 @@ int main(int argc, const char **argv) {
 
   ForAnnotator forAnnotator(&Tool.getReplacements());
   Finder.addMatcher(LoopMatcher, &forAnnotator);
+  IfAnnotator ifAnnotator(&Tool.getReplacements());
+  Finder.addMatcher(IfMatcher, &ifAnnotator);
 
   int Result = Tool.run(newFrontendActionFactory(&Finder));
   if( !Result ) {

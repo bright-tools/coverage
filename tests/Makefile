@@ -9,5 +9,5 @@ all: $(TEST_REPORTS)
 clean:
 	rm -f $(TEST_REPORTS)
 
-%.cannot: %.c
-	$(ANNOTATE) $+ -- > $@
+%.cannot: %.c $(ANNOTATE)
+	$(ANNOTATE) $< -- > $@

@@ -14,6 +14,17 @@
    limitations under the License.
 */
 
+#if 0
+#include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/Rewrite/Core/Rewriter.h"
+#include "clang/Rewrite/Frontend/Rewriters.h"
+#include "clang/Tooling/Refactoring.h"
+#include "clang/Tooling/Tooling.h"
+#include "clang/ASTMatchers/ASTMatchers.h"
+#include "clang/ASTMatchers/ASTMatchFinder.h"
+#endif
+
+
 #include "clang/Basic/SourceManager.h"
 
 #include <sstream>
@@ -21,55 +32,55 @@
 #include "ForAnnotator.hpp"
 #include "AnnotationGenerator.hpp"
 
-using namespace clang;
 using namespace std;
+using namespace clang;
+using namespace clang::ast_matchers;
+using namespace clang::tooling;
 
-ForAnnotator::ForAnnotator(Replacements *Replace) : Replace(Replace)
+
+ForAnnotator::ForAnnotator(Replacements *Replace) : Annotator(Replace)
 {
-}
-
-// FIXME: Pull out helper methods in here into more fitting places.
-
-// Returns the text that makes up 'node' in the source.
-// Returns an empty string if the text cannot be found.
-template <typename T>
-static std::string getText(const SourceManager &SourceManager, const T &Node) {
-  SourceLocation StartSpellingLocation =
-      SourceManager.getSpellingLoc(Node.getLocStart());
-  SourceLocation EndSpellingLocation =
-      SourceManager.getSpellingLoc(Node.getLocEnd());
-  if (!StartSpellingLocation.isValid() || !EndSpellingLocation.isValid()) {
-    return std::string();
-  }
-  bool Invalid = true;
-  const char *Text =
-      SourceManager.getCharacterData(StartSpellingLocation, &Invalid);
-  if (Invalid) {
-    return std::string();
-  }
-  std::pair<FileID, unsigned> Start =
-      SourceManager.getDecomposedLoc(StartSpellingLocation);
-  std::pair<FileID, unsigned> End =
-      SourceManager.getDecomposedLoc(Lexer::getLocForEndOfToken(
-          EndSpellingLocation, 0, SourceManager, LangOptions()));
-  if (Start.first != End.first) {
-    // Start and end are in different files.
-    return std::string();
-  }
-  if (End.second < Start.second) {
-    // Shuffling text with macros may cause this.
-    return std::string();
-  }
-  return std::string(Text, End.second - Start.second);
 }
 
 
 void ForAnnotator::run(const MatchFinder::MatchResult &Result) 
 {
     const ForStmt *FS;
+
+	llvm::errs() << "ForAnnotator::run ~ Found 'for' match\n";
+
     if (FS = Result.Nodes.getNodeAs<clang::ForStmt>("forLoop"))
     {
-        Replace->insert(Replacement(*Result.SourceManager, FS->getLocEnd(), 0, "moxy"));
+		llvm::errs() << "ForAnnotator::run ~ Matched statement\n";
+
+#if 0
+		FS->dump();
+#endif
+
+		const Stmt* forBody = FS->getBody();
+
+		if( forBody->getStmtClass() != Stmt::CompoundStmtClass )
+		{
+			HandleNonCompound( Result, forBody );
+			//forBody->dump();
+		}
+
+#if 0
+		for( Stmt::const_child_iterator x = FS->child_begin(); x!= FS->child_end(); x++ ) {
+			if(( *x != NULL ) &&
+				( x->getStmtClass() != Stmt::NullStmtClass )) {
+				x->dump();
+				SourceLocation loc = x->getLocEnd().getLocWithOffset(1);
+				Replace->insert(Replacement(*Result.SourceManager, loc, 0, "formoxy"));
+			}
+			//break;
+		}
+
+#endif
+		/* Get the location just after the for loop and instrument that.
+		   This is so that we can detect that the for loop exited. */
+		//SourceLocation loc = FS->getLocEnd().getLocWithOffset(1);
+        //Replace->insert(Replacement(*Result.SourceManager, loc, 0, "moxy"));
     }
 }
 

@@ -13,26 +13,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 */
+#if !defined( ANNOTATOR_FOR_ANNOTATOR_HPP )
+#define       ANNOTATOR_FOR_ANNOTATOR_HPP
 
-#include "clang/AST/RecursiveASTVisitor.h"
-#include "clang/Rewrite/Core/Rewriter.h"
-#include "clang/Rewrite/Frontend/Rewriters.h"
 #include "clang/Tooling/Refactoring.h"
 #include "clang/Tooling/Tooling.h"
 #include "clang/ASTMatchers/ASTMatchers.h"
 #include "clang/ASTMatchers/ASTMatchFinder.h"
 
-using namespace clang;
-using namespace clang::ast_matchers;
-using namespace clang::tooling;
+#include "Annotator.hpp"
 
-class ForAnnotator : public MatchFinder::MatchCallback
+class ForAnnotator : public Annotator
 {
 public:
-    ForAnnotator(Replacements *Replace);
-    virtual void run(const MatchFinder::MatchResult &Result);
-private:
-    Replacements *Replace;
+    ForAnnotator(clang::tooling::Replacements *Replace);
+    virtual void run(const public clang::ast_matchers::MatchFinder::MatchResult &Result);
 };
 
-
+#endif
