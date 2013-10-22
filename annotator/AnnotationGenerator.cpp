@@ -58,6 +58,28 @@ static const DeclContext *getOutermostFuncOrBlockContext(const Decl *D) {
 #if defined _WIN32
 // TODO: This is Windows only code ...
 #include "Shlwapi.h"
+#include <algorithm>
+
+// "Borrowed" from http://stackoverflow.com/questions/7724011/in-c-whats-the-fastest-way-to-replace-all-occurrences-of-a-substring-within
+std::string
+replaceAll( std::string const& original,
+            std::string const& before,
+            std::string const& after )
+{
+    std::string retval;
+    std::string::const_iterator end     = original.end();
+    std::string::const_iterator current = original.begin();
+    std::string::const_iterator next    =
+            std::search( current, end, before.begin(), before.end() );
+    while ( next != end ) {
+        retval.append( current, next );
+        retval.append( after );
+        current = next + before.size();
+        next = std::search( current, end, before.begin(), before.end() );
+    }
+    retval.append( current, next );
+    return retval;
+}
 
 std::string getFileName( const std::string pFn )
 {
@@ -84,7 +106,9 @@ std::string getFileName( const std::string pFn )
 		PathCanonicalize(buffer_1,szOut);
 
 		path = buffer_1;
-		// TODO: path needs escaping .. *sigh*
+
+		// Need to escape out all those pesky directory separators
+		path = replaceAll( path, "\\", "\\\\" );
 
 		return path;
 	} else {
