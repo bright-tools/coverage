@@ -89,11 +89,12 @@ void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::Match
 
 	if( pStmt->getStmtClass() != Stmt::NullStmtClass ) {
 
-		string stmt_class = pParent->getStmtClassName();
-		llvm::errs() << "Annotator::HandleNonCompound ~ Wrapping " << pStmt->getStmtClassName() << " (parent: " << stmt_class << ") into compound\n";
+		string parent_stmt_class = pParent->getStmtClassName();
+		string stmt_class = pStmt->getStmtClassName();
+		llvm::errs() << "Annotator::HandleNonCompound ~ Wrapping " << stmt_class << " (parent: " << parent_stmt_class << ") into compound\n";
 
-		string opening = "{ /* coverage: Made " + stmt_class + " compound (opening) */\n";
-	    string closing = "} /* coverage: Made " + stmt_class + " compound (closing) */\n";
+		string opening = "{ /* coverage: Made " + stmt_class + " (parent : " + parent_stmt_class + ") compound (opening) */\n";
+	    string closing = "} /* coverage: Made " + stmt_class + " (parent : " + parent_stmt_class + ") compound (closing) */\n";
 
 		// Find start location and add an replacement to nopening brace
 		loc = pStmt->getLocStart();

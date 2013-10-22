@@ -57,7 +57,8 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 		/* Check for an "else" part */
 		if( elseBody != NULL ) {
 
-			/* If the "else" is non-compound and it's not a chained "if" */
+			/* If the "else" is non-compound and it's not a chained "if" (the if will be handled by a subsequent 
+			   call to this handler) */
 			if(( elseBody->getStmtClass() != Stmt::CompoundStmtClass ) &&
 			   ( elseBody->getStmtClass() != Stmt::IfStmtClass ))
 			{
@@ -66,11 +67,9 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 				HandleNonCompound( Result, elseBody, FS );
 			}
 
-			/* If the else will be handled by another handler (e.g. it's an "if", which will be handled by another 
-			   call to this callback), then we don't want to handle it as a flow change.  If it's not, we do. */
-			if( ! HandlerExistsFor( elseBody->getStmtClass() ))
-			{
-				HandleFlowChange( Result, elseBody );
+			/* TODO: Should this just be "IfSmtClass"? */
+			if( !HandlerExistsFor( elseBody->getStmtClass()) ) {
+ 				HandleFlowChange( Result, elseBody );
 			}
 		}
 

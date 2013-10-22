@@ -53,24 +53,15 @@ void ForAnnotator::run(const MatchFinder::MatchResult &Result)
     {
 		llvm::errs() << "ForAnnotator::run ~ Matched statement\n";
 
-#if 0
-		FS->dump();
-#endif
-
 		const Stmt* forBody = FS->getBody();
 
 		if( forBody->getStmtClass() != Stmt::CompoundStmtClass )
 		{
+			llvm::errs() << "ForAnnotator::run ~ Non-compound 'then': " << forBody->getStmtClassName() << "\n";
 			HandleNonCompound( Result, forBody, FS );
-			//forBody->dump();
 		}
 
-		/* If the else will be handled by another handler (e.g. it's an "if", which will be handled by another 
-			   call to this callback), then we don't want to handle it as a flow change.  If it's not, we do. */
-		if( ! HandlerExistsFor( forBody->getStmtClass() ))
-		{
-			HandleFlowChange( Result, forBody );
-		}
+		HandleFlowChange( Result, forBody );
 #if 0
 		for( Stmt::const_child_iterator x = FS->child_begin(); x!= FS->child_end(); x++ ) {
 			if(( *x != NULL ) &&
