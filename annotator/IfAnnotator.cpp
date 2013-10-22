@@ -46,7 +46,7 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 
 		if( thenBody->getStmtClass() != Stmt::CompoundStmtClass )
 		{
-			llvm::errs() << "IfAnnotator::run ~ Non-compound 'then'\n";
+			llvm::errs() << "IfAnnotator::run ~ Non-compound 'then': " << thenBody->getStmtClassName() << "\n";
 			HandleNonCompound( Result, thenBody, FS );
 		}
 
@@ -54,20 +54,25 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 
 		const Stmt* elseBody = FS->getElse();
 
-		/* If the "else" is non-compount and it's not a chained "if" */
-		if((elseBody != NULL ) &&
-			( elseBody->getStmtClass() != Stmt::CompoundStmtClass ) &&
-			( elseBody->getStmtClass() != Stmt::IfStmtClass ))
-		{
-			llvm::errs() << "IfAnnotator::run ~ Non-compound 'else'\n";
-			HandleNonCompound( Result, elseBody, FS );
-		}
+		/* Check for an "else" part */
+		if( elseBody != NULL ) {
 
-		if( elseBody != NULL )
-		{
-			HandleFlowChange( Result, elseBody );
-		}
+			/* If the "else" is non-compound and it's not a chained "if" */
+			if(( elseBody->getStmtClass() != Stmt::CompoundStmtClass ) &&
+			   ( elseBody->getStmtClass() != Stmt::IfStmtClass ))
+			{
+				llvm::errs() << "IfAnnotator::run ~ Non-compound 'else': " << elseBody->getStmtClassName() << "\n";
+				elseBody->dump();
+				HandleNonCompound( Result, elseBody, FS );
+			}
 
+			/* If the else will be handled by another handler (e.g. it's an "if", which will be handled by another 
+			   call to this callback), then we don't want to handle it as a flow change.  If it's not, we do. */
+			if( ! HandlerExistsFor( elseBody->getStmtClass() ))
+			{
+				HandleFlowChange( Result, elseBody );
+			}
+		}
 
     }
 

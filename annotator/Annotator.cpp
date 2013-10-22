@@ -38,6 +38,8 @@ Annotator::~Annotator()
 
 void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
 {
+    llvm::errs() << "Annotator::HandleFlowChange ~ Handling\n";
+
 	if( pStmt->getStmtClass() != Stmt::NullStmtClass )
 	{
 		string annotationText = annotationGenerator.GetAnnotation( Result, pStmt );
@@ -67,6 +69,14 @@ void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchR
 
 		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, annotationText));
 	}
+    llvm::errs() << "Annotator::HandleFlowChange ~ Done\n";
+}
+
+bool Annotator::HandlerExistsFor( const clang::Stmt::StmtClass pClass )
+{
+	return(( pClass == Stmt::IfStmtClass )    ||
+		   ( pClass == Stmt::WhileStmtClass ) ||
+  		   ( pClass == Stmt::ForStmtClass ));
 }
 
 void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const clang::Stmt* pParent )
@@ -79,11 +89,11 @@ void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::Match
 
 	if( pStmt->getStmtClass() != Stmt::NullStmtClass ) {
 
-		llvm::errs() << "Annotator::HandleNonCompound ~ Wrapping into compound\n";
-
 		string stmt_class = pParent->getStmtClassName();
-	    string opening = "{ /* coverage: Made " + stmt_class + " compound */\n";
-	    string closing = "} /* coverage: Made " + stmt_class + " compound */\n";
+		llvm::errs() << "Annotator::HandleNonCompound ~ Wrapping " << pStmt->getStmtClassName() << " (parent: " << stmt_class << ") into compound\n";
+
+		string opening = "{ /* coverage: Made " + stmt_class + " compound (opening) */\n";
+	    string closing = "} /* coverage: Made " + stmt_class + " compound (closing) */\n";
 
 		// Find start location and add an replacement to nopening brace
 		loc = pStmt->getLocStart();
@@ -94,12 +104,12 @@ void Annotator::HandleNonCompound( const clang::ast_matchers::MatchFinder::Match
 
 		// If we didn't find a semi-colon separator, just use the end for the node
 		if(! sloc.isValid() ) {
+			llvm::errs() << "Annotator::HandleNonCompound ~ Using default end location\n";
 			loc = pStmt->getLocEnd();
+		} else {
+			// TODO: Need to use the Lexer here rather than just getLocEnd() - not sure why!
+			loc = Lexer::getLocForEndOfToken(sloc, 0, (*Result.SourceManager), LangOptions());
 		}
-
-		// TODO: Need to use the Lexer here rather than just getLocEnd() - not sure why!
-		loc = Lexer::getLocForEndOfToken(sloc, 0, (*Result.SourceManager), LangOptions());
-
 		// Add closing brace
 		Replace->insert(clang::tooling::Replacement(*Result.SourceManager, loc, 0, closing));
 	}

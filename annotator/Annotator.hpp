@@ -35,6 +35,8 @@ public:
 
 	void HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
 
+	bool HandlerExistsFor( const clang::Stmt::StmtClass pClass );
+
 protected:
 	const clang::Stmt* FindLast( const clang::Stmt* pStmt );
 

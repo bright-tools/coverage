@@ -65,8 +65,12 @@ void ForAnnotator::run(const MatchFinder::MatchResult &Result)
 			//forBody->dump();
 		}
 
-		HandleFlowChange( Result, forBody );
-
+		/* If the else will be handled by another handler (e.g. it's an "if", which will be handled by another 
+			   call to this callback), then we don't want to handle it as a flow change.  If it's not, we do. */
+		if( ! HandlerExistsFor( forBody->getStmtClass() ))
+		{
+			HandleFlowChange( Result, forBody );
+		}
 #if 0
 		for( Stmt::const_child_iterator x = FS->child_begin(); x!= FS->child_end(); x++ ) {
 			if(( *x != NULL ) &&
