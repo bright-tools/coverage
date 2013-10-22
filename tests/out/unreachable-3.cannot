@@ -25,9 +25,7 @@ main (void)
   for (i = 0; i < 1;)
     {
       /* But the infinite loop exits */
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\unreachable-3.c",
-	 "main", 721);
+      BRIGHT_COVERAGE ("unreachable-3.c", "main", 713);
       return 1;
     }
   /* No code here, so not unreachable! */

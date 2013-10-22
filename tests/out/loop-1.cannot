@@ -23,39 +23,29 @@ main (void)
   int t;
   for (i = 0; i < 0; i++)
     {
-      BRIGHT_COVERAGE
-        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
-         "main", 703);
+      BRIGHT_COVERAGE ("loop-1.c", "main", 703);
       t++;
     }
   for (i = 0; i < 0; i++)
     {                           /* coverage: Made ForStmt compound */
-      BRIGHT_COVERAGE
-        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
-         "main", 752);
+      BRIGHT_COVERAGE ("loop-1.c", "main", 752);
       t++, i++, t++;
     }                           /* coverage: Made ForStmt compound */
 
 
   for (i = 0; i < 0; i++)
     {                           /* coverage: Made ForStmt compound */
-      BRIGHT_COVERAGE
-        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
-         "main", 798);
+      BRIGHT_COVERAGE ("loop-1.c", "main", 798);
       ++t;
     }                           /* coverage: Made ForStmt compound */
 
 
   for (i = 0; i < 1; i++)
     {                           /* coverage: Made ForStmt compound */
-      BRIGHT_COVERAGE
-        ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
-         "main", 834);
+      BRIGHT_COVERAGE ("loop-1.c", "main", 834);
       if (i == 0)
         {                       /* coverage: Made IfStmt compound */
-          BRIGHT_COVERAGE
-            ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\loop-1.c",
-             "main", 852);
+          BRIGHT_COVERAGE ("loop-1.c", "main", 852);
           t++;
         }                       /* coverage: Made IfStmt compound */
     }                           /* coverage: Made ForStmt compound */

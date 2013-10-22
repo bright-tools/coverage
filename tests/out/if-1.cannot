@@ -23,42 +23,36 @@ main (void)
   int t;
 
   if (i == 0)
-    {
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
-	 "main", 704);
+    {                           /* coverage: Made IfStmt compound */
+      BRIGHT_COVERAGE ("if-1.c", "main", 692);
       t = 1;
-    }
+    }                           /* coverage: Made IfStmt compound */
+
   else
-    BRIGHT_COVERAGE
-      ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
-       "main", 720);
+    BRIGHT_COVERAGE ("if-1.c", "main", 706);
   if (i < 0)
-    {
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
-	 "main", 740);
+    {                           /* coverage: Made IfStmt compound */
+      BRIGHT_COVERAGE ("if-1.c", "main", 721);
       t = 2;
-    }
+    }                           /* coverage: Made IfStmt compound */
+
   else
-    {
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
-	 "main", 764);
+    {                           /* coverage: Made IfStmt compound */
+      BRIGHT_COVERAGE ("if-1.c", "main", 739);
       t = 3;
-    }
+    }                           /* coverage: Made IfStmt compound */
+
 
   if (i == 0)
     ;
   else;
 
   if (i == 0)
-    {
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-1.c",
-	 "main", 844);
+    {                           /* coverage: Made IfStmt compound */
+      BRIGHT_COVERAGE ("if-1.c", "main", 794);
       t = 3;
-    }
+    }                           /* coverage: Made IfStmt compound */
+
 
   return 0;
 }

@@ -23,9 +23,7 @@ main (void)
 
   if (1)
     {
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\unreachable-1.c",
-	 "main", 683);
+      BRIGHT_COVERAGE ("unreachable-1.c", "main", 681);
       return 1;
     }
 }

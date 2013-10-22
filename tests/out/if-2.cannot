@@ -27,24 +27,20 @@ main (void)
       int j = 3;
       int q = 1;
 
-      BRIGHT_COVERAGE
-	("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c",
-	 "main", 704);
+      BRIGHT_COVERAGE ("if-2.c", "main", 696);
       if (j == 3)
-	{
-	  BRIGHT_COVERAGE
-	    ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c",
-	     "main", 778);
-	  t = 7;
-	}
+        {                       /* coverage: Made IfStmt compound */
+          BRIGHT_COVERAGE ("if-2.c", "main", 752);
+          t = 7;
+        }                       /* coverage: Made IfStmt compound */
+
 
       if (t == 7)
-	{
-	  BRIGHT_COVERAGE
-	    ("C:\Users\catalyst\Documents\coverage\GIT\coverage\tests\if-2.c",
-	     "main", 819);
-	  return 1;
-	}
+        {                       /* coverage: Made IfStmt compound */
+          BRIGHT_COVERAGE ("if-2.c", "main", 779);
+          return 1;
+        }                       /* coverage: Made IfStmt compound */
+
     }
 
   return 0;
