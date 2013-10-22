@@ -2,7 +2,9 @@ TEST_FILES=$(wildcard *.c)
 
 TEST_REPORTS=$(foreach F,$(TEST_FILES:.c=.cannot),out/$F)
 
-ANNOTATE=../../../build4/bin/Debug/coverage.exe
+ANNOTATE_CMD=../../../build4/bin/Debug/coverage.exe
+ANNOTATE_OPT=-r=.
+ANNOTATE=$(ANNOTATE_CMD) $(ANNOTATE_OPT)
 OUTPUT_DIR=out
 INDENT_CMD=indent
 INDENT_OPT=-nut
@@ -17,5 +19,5 @@ $(OUTPUT_DIR):
 clean:
 	rm -f $(TEST_REPORTS)
 
-$(OUTPUT_DIR)/%.cannot: %.c $(ANNOTATE)
+$(OUTPUT_DIR)/%.cannot: %.c $(ANNOTATE_CMD)
 	$(ANNOTATE) $< -- | $(INDENT) > $@
