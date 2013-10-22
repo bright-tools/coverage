@@ -41,6 +41,7 @@
 
 #include "ForAnnotator.hpp"
 #include "IfAnnotator.hpp"
+#include "coverage-annotator-cl.hpp"
 
 #include <string>
 
@@ -72,10 +73,16 @@ cl::opt<std::string> BuildPath(
   cl::Positional,
   cl::desc("<build-path>"));
 
-cl::list<std::string> SourcePaths(
+cl::opt<std::string> ProjectRoot(
+  "r",
+  cl::desc("Set project root directory"),
+  cl::value_desc("filename"));
+
+cl::opt<std::string> SourcePaths(
   cl::Positional,
   cl::desc("<source>"),
   cl::Required);
+
 
 StatementMatcher LoopMatcher = forStmt().bind("forLoop");
 StatementMatcher IfMatcher = ifStmt().bind("ifStmt");
@@ -90,7 +97,7 @@ int main(int argc, const char **argv) {
     Compilations.reset(
       !BuildPath.empty() ?
         CompilationDatabase::autoDetectFromDirectory(BuildPath, ErrorMessage) :
-        CompilationDatabase::autoDetectFromSource(SourcePaths[0], ErrorMessage)
+        CompilationDatabase::autoDetectFromSource(SourcePaths, ErrorMessage)
       );
 
 //  Still no compilation DB? - bail.
@@ -118,22 +125,25 @@ int main(int argc, const char **argv) {
         &*DiagOpts, &DiagnosticPrinter, false);
     SourceManager Sources(Diagnostics, Tool.getFiles());
     Rewriter Rewrite(Sources, DefaultLangOptions);
-    // TODO: hard-code to argv[1]
-    const FileEntry *FileIn = Sources.getFileManager().getFile(argv[1]);
+
+    const FileEntry *FileIn = Sources.getFileManager().getFile(SourcePaths);
     FileID f = Sources.createMainFileID(FileIn);
 
     if (!tooling::applyAllReplacements(Tool.getReplacements(),Rewrite)) {
       llvm::errs() << "Skipped some replacements.\n";
     }
 
-    const RewriteBuffer *RewriteBuf =
-       Rewrite.getRewriteBufferFor(f);
-    if( RewriteBuf == NULL ) {
+    const RewriteBuffer *RewriteBuf = Rewrite.getRewriteBufferFor(f);
+
+    if( RewriteBuf == NULL ) 
+	{
 		/* No re-writes?  Use file verbatim */
 		llvm::errs() << "Couldn't get rewrite buffer.\n";
 		const MemoryBuffer* verbatimBuffer = Sources.getFileManager().getBufferForFile(FileIn);
 		llvm::outs() << std::string(verbatimBuffer->getBufferStart(), verbatimBuffer->getBufferEnd());
-    } else {
+    } 
+	else 
+	{
       llvm::outs() << std::string(RewriteBuf->begin(), RewriteBuf->end());
 	}
   }
