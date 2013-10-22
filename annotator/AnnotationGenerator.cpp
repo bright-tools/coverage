@@ -20,7 +20,7 @@
 #include "clang/AST/Decl.h"
 #include "clang/AST/ASTContext.h"
 #include "clang/Basic/SourceManager.h"
-
+#include "coverage-annotator-cl.hpp"
 
 using namespace clang;
 using namespace std;
@@ -53,6 +53,47 @@ static const DeclContext *getOutermostFuncOrBlockContext(const Decl *D) {
   } while((DC != NULL ) && (DC->getDeclKind() != Decl::TranslationUnit));
   return Ret;
 }
+#endif
+
+#if defined _WIN32
+// TODO: This is Windows only code ...
+#include "Shlwapi.h"
+
+std::string getFileName( const std::string pFn )
+{
+	if( ProjectRoot.length() ) 
+	{
+		// TODO: Clean up variable names, etc.
+		char szOut[MAX_PATH] = "";
+		char can[MAX_PATH] = "";
+		TCHAR** lppPart={NULL};
+		char buffer_1[MAX_PATH];
+		string path;
+
+		GetFullPathName(ProjectRoot.c_str(),
+					 MAX_PATH,
+					 can,
+					 lppPart);
+
+		PathRelativePathTo(szOut,
+						   can,
+						   FILE_ATTRIBUTE_DIRECTORY,
+						   pFn.c_str(),
+						   FILE_ATTRIBUTE_NORMAL);
+
+		PathCanonicalize(buffer_1,szOut);
+
+		path = buffer_1;
+		// TODO: path needs escaping .. *sigh*
+
+		return path;
+	} else {
+		return pFn;
+	}
+}
+// !TODO: Windows only code
+#else
+#error Really sorry - don't have path handling coded for your platform yet :-(
 #endif
 
 std::string getFuncName( ASTContext& pCtx, const clang::Stmt* pStmt )
@@ -101,7 +142,7 @@ std::string AnnotationGenerator::GetAnnotation( const clang::ast_matchers::Match
 	SourceLocation startLoc = pStmt->getLocStart();
 	int loc = startLoc.getRawEncoding();
 	/* TODO: this needs to be stripped down so that it's not an absolute path */
-	std::string filen = (*Result.SourceManager).getFilename( startLoc );
+	std::string filen = getFileName( (*Result.SourceManager).getFilename( startLoc ) );
 	std::string funn = getFuncName( *Result.Context, pStmt );
 
 	ret << GetAnnotationPrefix() << "(\"" << filen << "\",\"" << funn << "\"," << loc << ");\n";
