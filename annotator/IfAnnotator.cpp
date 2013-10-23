@@ -68,7 +68,7 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 			}
 
 			/* TODO: Should this just be "IfSmtClass"? */
-			if( !HandlerExistsFor( elseBody->getStmtClass()) ) {
+			if( elseBody->getStmtClass() != Stmt::IfStmtClass ) {
  				HandleFlowChange( Result, elseBody );
 			}
 		}
