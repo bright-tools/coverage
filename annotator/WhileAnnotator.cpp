@@ -50,5 +50,7 @@ void WhileAnnotator::run(const MatchFinder::MatchResult &Result)
 
 		HandleFlowChange( Result, whileBody );
     }
+
+	llvm::errs() << "WhileAnnotator::run ~ Done\n";
 }
 

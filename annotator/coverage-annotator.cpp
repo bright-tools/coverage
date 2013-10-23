@@ -87,7 +87,7 @@ cl::opt<std::string> SourcePaths(
 
 StatementMatcher LoopMatcher = forStmt().bind("forLoop");
 StatementMatcher IfMatcher = ifStmt().bind("ifStmt");
-StatementMatcher WhileMatcher = whileStmt().bind("whileStmt");
+StatementMatcher WhileMatcher = whileStmt().bind("whileLoop");
 
 int main(int argc, const char **argv) {
   llvm::sys::PrintStackTraceOnErrorSignal();
