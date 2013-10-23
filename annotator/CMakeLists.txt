@@ -5,6 +5,7 @@ add_clang_executable(coverage
   AnnotatorUtils.cpp
   Annotator.cpp
   ForAnnotator.cpp
+  WhileAnnotator.cpp
   IfAnnotator.cpp
   AnnotationGenerator.cpp
   coverage-annotator.cpp

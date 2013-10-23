@@ -40,6 +40,7 @@
 #include "clang/Frontend/TextDiagnosticPrinter.h"
 
 #include "ForAnnotator.hpp"
+#include "WhileAnnotator.hpp"
 #include "IfAnnotator.hpp"
 #include "coverage-annotator-cl.hpp"
 
@@ -86,6 +87,7 @@ cl::opt<std::string> SourcePaths(
 
 StatementMatcher LoopMatcher = forStmt().bind("forLoop");
 StatementMatcher IfMatcher = ifStmt().bind("ifStmt");
+StatementMatcher WhileMatcher = whileStmt().bind("whileStmt");
 
 int main(int argc, const char **argv) {
   llvm::sys::PrintStackTraceOnErrorSignal();
@@ -114,6 +116,8 @@ int main(int argc, const char **argv) {
   Finder.addMatcher(LoopMatcher, &forAnnotator);
   IfAnnotator ifAnnotator(&Tool.getReplacements());
   Finder.addMatcher(IfMatcher, &ifAnnotator);
+  WhileAnnotator whileAnnotator(&Tool.getReplacements());
+  Finder.addMatcher(WhileMatcher, &whileAnnotator);
 
   int Result = Tool.run(newFrontendActionFactory(&Finder));
   if( !Result ) {
