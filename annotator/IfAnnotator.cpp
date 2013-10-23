@@ -63,7 +63,6 @@ void IfAnnotator::run(const MatchFinder::MatchResult &Result)
 			   ( elseBody->getStmtClass() != Stmt::IfStmtClass ))
 			{
 				llvm::errs() << "IfAnnotator::run ~ Non-compound 'else': " << elseBody->getStmtClassName() << "\n";
-				elseBody->dump();
 				HandleNonCompound( Result, elseBody, FS );
 			}
 
