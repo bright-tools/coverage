@@ -29,17 +29,17 @@ main (void)
 
       BRIGHT_COVERAGE ("if-2.c", "main", 696);
       if (j == 3)
-        {                       /* coverage: Made IfStmt compound */
+        {                       /* coverage: Made BinaryOperator (parent : IfStmt) compound (opening) */
           BRIGHT_COVERAGE ("if-2.c", "main", 752);
           t = 7;
-        }                       /* coverage: Made IfStmt compound */
+        }                       /* coverage: Made BinaryOperator (parent : IfStmt) compound (closing) */
 
 
       if (t == 7)
-        {                       /* coverage: Made IfStmt compound */
+        {                       /* coverage: Made ReturnStmt (parent : IfStmt) compound (opening) */
           BRIGHT_COVERAGE ("if-2.c", "main", 779);
           return 1;
-        }                       /* coverage: Made IfStmt compound */
+        }                       /* coverage: Made ReturnStmt (parent : IfStmt) compound (closing) */
 
     }
 

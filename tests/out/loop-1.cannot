@@ -27,28 +27,28 @@ main (void)
       t++;
     }
   for (i = 0; i < 0; i++)
-    {                           /* coverage: Made ForStmt compound */
+    {                           /* coverage: Made BinaryOperator (parent : ForStmt) compound (opening) */
       BRIGHT_COVERAGE ("loop-1.c", "main", 752);
       t++, i++, t++;
-    }                           /* coverage: Made ForStmt compound */
+    }                           /* coverage: Made BinaryOperator (parent : ForStmt) compound (closing) */
 
 
   for (i = 0; i < 0; i++)
-    {                           /* coverage: Made ForStmt compound */
+    {                           /* coverage: Made UnaryOperator (parent : ForStmt) compound (opening) */
       BRIGHT_COVERAGE ("loop-1.c", "main", 798);
       ++t;
-    }                           /* coverage: Made ForStmt compound */
+    }                           /* coverage: Made UnaryOperator (parent : ForStmt) compound (closing) */
 
 
   for (i = 0; i < 1; i++)
-    {                           /* coverage: Made ForStmt compound */
+    {                           /* coverage: Made IfStmt (parent : ForStmt) compound (opening) */
       BRIGHT_COVERAGE ("loop-1.c", "main", 834);
       if (i == 0)
-        {                       /* coverage: Made IfStmt compound */
+        {                       /* coverage: Made UnaryOperator (parent : IfStmt) compound (opening) */
           BRIGHT_COVERAGE ("loop-1.c", "main", 852);
           t++;
-        }                       /* coverage: Made IfStmt compound */
-    }                           /* coverage: Made ForStmt compound */
+        }                       /* coverage: Made UnaryOperator (parent : IfStmt) compound (closing) */
+    }                           /* coverage: Made IfStmt (parent : ForStmt) compound (closing) */
 
 
   for (i = 0; i < 0; i++, t++);

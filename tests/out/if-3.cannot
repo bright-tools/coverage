@@ -25,10 +25,10 @@ main (void)
   if (i == 0);
 
   if (i == 0)
-    {                           /* coverage: Made IfStmt compound */
+    {                           /* coverage: Made ReturnStmt (parent : IfStmt) compound (opening) */
       BRIGHT_COVERAGE ("if-3.c", "main", 712);
       return 1;
-    }                           /* coverage: Made IfStmt compound */
+    }                           /* coverage: Made ReturnStmt (parent : IfStmt) compound (closing) */
 
 
   /* This function will always return due to the above.  As there's no code

@@ -22,37 +22,118 @@ main (void)
   int i;
   int t;
 
+  /* The following structure is intended to test the instrumentation of
+     non-compount chained "if .. else if .. else" statements */
   if (i == 0)
-    {                           /* coverage: Made IfStmt compound */
-      BRIGHT_COVERAGE ("if-1.c", "main", 692);
+    {                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 828);
       t = 1;
-    }                           /* coverage: Made IfStmt compound */
+    }                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (closing) */
 
-  else
-    BRIGHT_COVERAGE ("if-1.c", "main", 706);
-  if (i < 0)
-    {                           /* coverage: Made IfStmt compound */
-      BRIGHT_COVERAGE ("if-1.c", "main", 721);
+  else if (i < 0)
+    {                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 857);
       t = 2;
-    }                           /* coverage: Made IfStmt compound */
+    }                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (closing) */
 
   else
-    {                           /* coverage: Made IfStmt compound */
-      BRIGHT_COVERAGE ("if-1.c", "main", 739);
+    {                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 875);
       t = 3;
-    }                           /* coverage: Made IfStmt compound */
+    }                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (closing) */
 
 
+  /* Testing "null" statements */
   if (i == 0)
     ;
   else;
 
+  /* Non-compound "then" with no else */
   if (i == 0)
-    {                           /* coverage: Made IfStmt compound */
-      BRIGHT_COVERAGE ("if-1.c", "main", 794);
+    {                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 1005);
       t = 3;
-    }                           /* coverage: Made IfStmt compound */
+    }                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (closing) */
 
+
+  /* Non-compound "then" with non-compound looping else */
+  if (i == 0)
+    {                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 1091);
+      t = 3;
+    }                           /* coverage: Made BinaryOperator (parent : IfStmt) compound (closing) */
+
+  else
+    {                           /* coverage: Made WhileStmt (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 1109);
+      while (t == 3)
+        {
+          BRIGHT_COVERAGE ("if-1.c", "main", 1125);
+          t = 0;
+        }                       /* coverage: Made WhileStmt (parent : IfStmt) compound (closing) */
+    }
+
+  if (i == 0)
+    {                           /* coverage: Made WhileStmt (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 1168);
+      while (t < 4)
+        {                       /* coverage: Made UnaryOperator (parent : WhileStmt) compound (opening) */
+          BRIGHT_COVERAGE ("if-1.c", "main", 1189);
+          t++;
+        }                       /* coverage: Made WhileStmt (parent : IfStmt) compound (closing) */
+    }                           /* coverage: Made UnaryOperator (parent : WhileStmt) compound (closing) */
+
+  else
+    {                           /* coverage: Made UnaryOperator (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 1205);
+      i++;
+    }                           /* coverage: Made UnaryOperator (parent : IfStmt) compound (closing) */
+
+
+  if (i == 0)
+    {                           /* coverage: Made ForStmt (parent : IfStmt) compound (opening) */
+      BRIGHT_COVERAGE ("if-1.c", "main", 1230);
+      for (i = 0; i < 10; i++)
+        {                       /* coverage: Made IfStmt (parent : ForStmt) compound (opening) */
+          BRIGHT_COVERAGE ("if-1.c", "main", 1263);
+          if (i > 3)
+            {                   /* coverage: Made UnaryOperator (parent : IfStmt) compound (opening) */
+              BRIGHT_COVERAGE ("if-1.c", "main", 1285);
+              t++;
+            }                   /* coverage: Made UnaryOperator (parent : IfStmt) compound (closing) */
+        }                       /* coverage: Made IfStmt (parent : ForStmt) compound (closing) */
+    }                           /* coverage: Made ForStmt (parent : IfStmt) compound (closing) */
+
+
+  if (i == 0)
+    {
+      BRIGHT_COVERAGE ("if-1.c", "main", 1308);
+      t++;
+    }
+  else
+    {
+      BRIGHT_COVERAGE ("if-1.c", "main", 1330);
+      t++;
+    }
+
+  if (i == 0)
+    {
+      BRIGHT_COVERAGE ("if-1.c", "main", 1365);
+      while (t != 1)
+        {
+          BRIGHT_COVERAGE ("if-1.c", "main", 1389);
+          t = 1;
+        }
+    }
+  else
+    {
+      BRIGHT_COVERAGE ("if-1.c", "main", 1423);
+      while (t != 1)
+        {
+          BRIGHT_COVERAGE ("if-1.c", "main", 1447);
+          t = 1;
+        }
+    }
 
   return 0;
 }
