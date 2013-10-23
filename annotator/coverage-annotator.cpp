@@ -42,6 +42,7 @@
 #include "ForAnnotator.hpp"
 #include "WhileAnnotator.hpp"
 #include "IfAnnotator.hpp"
+#include "CaseAnnotator.hpp"
 #include "coverage-annotator-cl.hpp"
 
 #include <string>
@@ -88,6 +89,11 @@ cl::opt<std::string> SourcePaths(
 StatementMatcher LoopMatcher = forStmt().bind("forLoop");
 StatementMatcher IfMatcher = ifStmt().bind("ifStmt");
 StatementMatcher WhileMatcher = whileStmt().bind("whileLoop");
+StatementMatcher CaseMatcher = caseStmt().bind("caseStmt");
+// TODO: do .. while
+// TODO: goto
+// TODO: while ...
+// TODO: function decl
 
 int main(int argc, const char **argv) {
   llvm::sys::PrintStackTraceOnErrorSignal();
@@ -118,6 +124,8 @@ int main(int argc, const char **argv) {
   Finder.addMatcher(IfMatcher, &ifAnnotator);
   WhileAnnotator whileAnnotator(&Tool.getReplacements());
   Finder.addMatcher(WhileMatcher, &whileAnnotator);
+  CaseAnnotator caseAnnotator(&Tool.getReplacements());
+  Finder.addMatcher(CaseMatcher, &caseAnnotator);
 
   int Result = Tool.run(newFrontendActionFactory(&Finder));
   if( !Result ) {
