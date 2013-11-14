@@ -159,7 +159,7 @@ std::string getFuncName( ASTContext& pCtx, const clang::Stmt* pStmt )
 	return ret;
 }
 
-std::string AnnotationGenerator::GetAnnotation( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
+std::string AnnotationGenerator::GetAnnotation( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const bool pUseComma )
 {
 	stringstream ret;
 
@@ -169,7 +169,14 @@ std::string AnnotationGenerator::GetAnnotation( const clang::ast_matchers::Match
 	std::string filen = getFileName( (*Result.SourceManager).getFilename( startLoc ) );
 	std::string funn = getFuncName( *Result.Context, pStmt );
 
-	ret << GetAnnotationPrefix() << "(\"" << filen << "\",\"" << funn << "\"," << loc << ");\n";
+	ret << GetAnnotationPrefix() << "(\"" << filen << "\",\"" << funn << "\"," << loc << ")";
+	if( pUseComma ) 
+	{
+		ret << ",";
+	} else {
+		ret << ";";
+	}
+	ret << "\n";
 
 	return ret.str();
 }

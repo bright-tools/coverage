@@ -90,10 +90,12 @@ StatementMatcher LoopMatcher = forStmt().bind("forLoop");
 StatementMatcher IfMatcher = ifStmt().bind("ifStmt");
 StatementMatcher WhileMatcher = whileStmt().bind("whileLoop");
 StatementMatcher CaseMatcher = caseStmt().bind("caseStmt");
+// TODO: default ... case doesn't cover that.
 // TODO: do .. while
 // TODO: goto
 // TODO: while ...
 // TODO: function decl
+// TODO: return ..
 
 int main(int argc, const char **argv) {
   llvm::sys::PrintStackTraceOnErrorSignal();

@@ -27,7 +27,7 @@ class AnnotationGenerator
     public:
         AnnotationGenerator();
 
-		std::string GetAnnotation( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
+		std::string GetAnnotation( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const bool pUseComma = false );
 
 	protected:
         static std::string GetFunctionStartAnnotation( const clang::FunctionDecl* const p_fn );

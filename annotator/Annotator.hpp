@@ -33,7 +33,7 @@ public:
 
 	void HandleNonCompound( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const clang::Stmt* pParent );
 
-	void HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt );
+	void HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const bool pUseComma = false );
 
 	bool HandlerExistsFor( const clang::Stmt::StmtClass pClass );
 

@@ -53,6 +53,7 @@ void ForAnnotator::run(const MatchFinder::MatchResult &Result)
     {
 		llvm::errs() << "ForAnnotator::run ~ Matched statement\n";
 
+		
 		const Stmt* forBody = FS->getBody();
 
 		if( forBody->getStmtClass() != Stmt::CompoundStmtClass )
@@ -62,6 +63,15 @@ void ForAnnotator::run(const MatchFinder::MatchResult &Result)
 		}
 
 		HandleFlowChange( Result, forBody );
+
+		const Stmt* forInc = FS->getInc();
+
+		if(( forInc != NULL ) &&
+		   ( forInc->getStmtClass() != Stmt::NullStmtClass ))
+		{
+			llvm::errs() << "ForAnnotator::run ~ Found increment/decrement term\n";
+			HandleFlowChange( Result, forInc, true );
+		}
 #if 0
 		for( Stmt::const_child_iterator x = FS->child_begin(); x!= FS->child_end(); x++ ) {
 			if(( *x != NULL ) &&

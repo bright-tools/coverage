@@ -36,13 +36,13 @@ Annotator::~Annotator()
 {
 }
 
-void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt )
+void Annotator::HandleFlowChange( const clang::ast_matchers::MatchFinder::MatchResult &Result, const clang::Stmt* pStmt, const bool pUseComma )
 {
     llvm::errs() << "Annotator::HandleFlowChange ~ Handling\n";
 
 	if( pStmt->getStmtClass() != Stmt::NullStmtClass )
 	{
-		string annotationText = annotationGenerator.GetAnnotation( Result, pStmt );
+		string annotationText = annotationGenerator.GetAnnotation( Result, pStmt, pUseComma );
 
 #if 0
 		pStmt->dump();
